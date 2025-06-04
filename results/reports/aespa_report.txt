@@ -1,21 +1,21 @@
 MEME ANALYSIS REPORT
 ==================================================
-Meme: chill guy
-Analysis Date: 2025-06-05 00:52:45
+Meme: aespa
+Analysis Date: 2025-06-05 00:55:15
 
 1. BASIC STATISTICS
 ------------------------------
-Total Posts        : 260
-Unique Authors     : 160
-Date Range         : 2016-09-26 ~ 2025-06-04
-Duration           : 3174 days
+Total Posts        : 3
+Unique Authors     : 3
+Date Range         : 2025-06-04 ~ 2025-06-04
+Duration           : 1 days
 
 2. ENGAGEMENT
 ------------------------------
-Avg Likes          : 298.66
-Avg Retweets       : 71.50
-Avg Views          : 30835.83
-Total Engagement   : 916562.7
+Avg Likes          : 15701.33
+Avg Retweets       : 12986.00
+Avg Views          : 364838.67
+Total Engagement   : 234471.6
 
 3. LIFECYCLE PHASES
 ------------------------------

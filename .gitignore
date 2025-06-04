@@ -1,1 +1,4 @@
+# 환경 변수 파일 무시
+.env
 properties.env
+*.env

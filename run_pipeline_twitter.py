@@ -10,7 +10,7 @@ from src.collectors.selenium_twitter_collector import SeleniumTwitterCollector
 from src.preprocessors.selenium_twitter_preprocessor import SeleniumTwitterPreprocessor
 from src.visualizers.selenium_twitter_visualizer import SeleniumTwitterVisualizer
 from src.analyzers.selenium_twitter_lifecycle_analyzer import SeleniumTwitterLifecycleAnalyzer
-from config.config import RAW_DATA_DIR, PROCESSED_DATA_DIR
+from config.config import RAW_DATA_DIR, PROCESSED_DATA_DIR, FIGURES_DIR
 
 def run_collection(meme_name):
     print(f"\n{'='*50}")
@@ -63,18 +63,36 @@ def run_visualization(processed_filename, meme_name):
     print(f"3단계: 시각화 생성")
     print(f"{'='*50}")
 
-    visualizer = SeleniumTwitterVisualizer()
+    #시각화 클래스 초기화
+    visualizer = SeleniumTwitterVisualizer(output_dir=FIGURES_DIR)
+
+    #전처리된 파일 로드
     filepath = os.path.join(PROCESSED_DATA_DIR, processed_filename)
     df = pd.read_csv(filepath)
-    df['created_at'] = pd.to_datetime(df['created_at'])
-    if 'date' in df.columns:
-        df['date'] = pd.to_datetime(df['date'])
 
-    visualizer.plot_lifecycle_curve(df, meme_name.replace(' ', '_').lower())
-    visualizer.plot_engagement_distribution(df, meme_name.replace(' ', '_').lower())
-    visualizer.plot_time_series(df, meme_name.replace(' ', '_').lower())
-    visualizer.plot_activity_heatmap(df, meme_name.replace(' ', '_').lower())
-    visualizer.plot_wordcloud(df, meme_name.replace(' ', '_').lower())
+    # datetime 컬럼 정리 
+    df['created_at'] = pd.to_datetime(df['created_at'], errors='coerce')
+    if 'date' in df.columns:
+        df['date'] = pd.to_datetime(df['date'], errors='coerce')
+
+    # 시각화를 위해 필요한 컬럼 생성
+    df['hour'] = df['created_at'].dt.hour
+    df['day_abbr'] = df['created_at'].dt.day_name().str[:3].str.upper()
+    df['like_rate'] = df['likes'] / (df['views'] + 1e-6)  # 분모 0 방지용
+
+    # 시각화 함수 실행
+    visualizer.plot_daily_post_trend(df)
+    visualizer.plot_engagement_distribution(df)
+    visualizer.plot_heatmap_by_day_hour(df)
+    visualizer.plot_wordcloud(df)
+    visualizer.plot_top_hashtags(df)
+    visualizer.plot_likes_vs_views(df)
+    visualizer.plot_likes_vs_retweets(df)
+    visualizer.plot_likes_views_trend(df)
+    visualizer.plot_retweet_trend(df)
+    visualizer.plot_like_rate_distribution(df)
+    visualizer.plot_survival_curve(df)
+
     print("✓ 시각화 완료!")
 
 def run_analysis(processed_filename, meme_name):

@@ -9,7 +9,7 @@ class SeleniumTwitterLifecycleAnalyzer:
 
     def analyze(self, df, meme_name):
         """
-        밈 수명 주기 분석: 총량 통계, 성장기/쇠퇴기 탐지
+        밈 수명 주기 분석: 총량 통계, 성장기/쇠퇴기 탐지 + 비율 기반 지표 추가
         """
         print("\n📊 === 밈 분석 시작 ===")
 
@@ -24,7 +24,10 @@ class SeleniumTwitterLifecycleAnalyzer:
             print("[경고] 유효한 날짜 데이터가 없어 분석을 수행할 수 없습니다.")
             return {}, {}, {}
 
-        # 총량 통계
+        # 총량 통계 및 비율 지표
+        df['like_rate'] = df['likes'] / df['views'].replace(0, pd.NA)
+        df['retweet_rate'] = df['retweets'] / df['views'].replace(0, pd.NA)
+
         metrics = {
             'total_posts': len(df),
             'unique_authors': df['author'].nunique(),
@@ -33,7 +36,9 @@ class SeleniumTwitterLifecycleAnalyzer:
             'avg_likes': df['likes'].mean(),
             'avg_retweets': df['retweets'].mean(),
             'avg_views': df['views'].mean() if 'views' in df.columns else 0,
-            'total_engagement': df['engagement_score'].sum()
+            'total_engagement': df['engagement_score'].sum(),
+            'like_rate': df['like_rate'].mean(skipna=True),
+            'retweet_rate': df['retweet_rate'].mean(skipna=True)
         }
 
         # 성장기: 일별 트윗 수 최댓값이 있는 날
@@ -90,6 +95,8 @@ class SeleniumTwitterLifecycleAnalyzer:
                 f.write(f"Avg Retweets       : {metrics.get('avg_retweets', 0):.2f}\n")
                 f.write(f"Avg Views          : {metrics.get('avg_views', 0):.2f}\n")
                 f.write(f"Total Engagement   : {metrics.get('total_engagement', 0)}\n")
+                f.write(f"Like Rate (Likes/Views) : {metrics.get('like_rate', 0):.4f}\n")
+                f.write(f"Retweet Rate (RT/Views) : {metrics.get('retweet_rate', 0):.4f}\n")
 
                 # 3. 수명 주기
                 f.write("\n3. LIFECYCLE PHASES\n")

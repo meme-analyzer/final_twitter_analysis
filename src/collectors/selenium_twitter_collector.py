@@ -85,13 +85,10 @@ class SeleniumTwitterCollector:
 
         return likes, retweets, replies, views
 
-        def search_posts(self, keyword, max_posts=None):  # max_posts는 이제 옵션
+    def search_posts(self, keyword, max_posts=1000):
         print(f"🔍 '{keyword}' 검색 시작...")
         self.load_cookies()
-
-        from urllib.parse import quote  # 검색어 인코딩
-        encoded_keyword = quote(keyword)
-        self.driver.get(f"https://twitter.com/search?q={encoded_keyword}&src=typed_query&f=live")
+        self.driver.get(f"https://twitter.com/search?q={keyword}&src=typed_query&f=top")
         time.sleep(3)
 
         try:
@@ -105,27 +102,25 @@ class SeleniumTwitterCollector:
 
         posts = []
         seen_urls = set()
+        scroll_count = 0
         last_height = self.driver.execute_script("return document.body.scrollHeight")
-
-        while True:
+        
+        while len(posts) < max_posts and scroll_count < 100:
             cards = self.driver.find_elements(By.CSS_SELECTOR, 'article[data-testid="tweet"]')
-            print(f"🔄 현재 감지된 트윗 수: {len(cards)}")
+            print(f"🔄 스크롤 {scroll_count + 1} - {len(cards)}개 트윗 감지됨")
             new_count = 0
 
             for card in cards:
                 try:
-                    # 트윗 URL 중복 방지
                     url_elem = card.find_element(By.CSS_SELECTOR, 'a[href*="/status/"]')
                     url = url_elem.get_attribute('href')
                     if url in seen_urls:
                         continue
                     seen_urls.add(url)
 
-                    # 텍스트 추출
                     text_elems = card.find_elements(By.CSS_SELECTOR, 'div[data-testid="tweetText"] span')
                     text = ' '.join([e.text for e in text_elems if e.text.strip()])
 
-                    # 사용자명 추출
                     username = "unknown"
                     username_elems = card.find_elements(By.CSS_SELECTOR, 'div[data-testid="User-Name"] span')
                     for elem in username_elems:
@@ -133,19 +128,14 @@ class SeleniumTwitterCollector:
                             username = elem.text.strip()
                             break
 
-                    # 게시 시간 추출
                     try:
                         timestamp = card.find_element(By.TAG_NAME, 'time').get_attribute('datetime')
                     except:
                         timestamp = datetime.now().isoformat()
 
-                    # 좋아요/리트윗/댓글/조회수 추출
                     likes, retweets, replies, views = self.extract_engagement_counts(card)
-
-                    # 해시태그 추출
                     hashtags = ','.join(re.findall(r'#\w+', text))
 
-                    # 데이터 저장
                     post = {
                         'author': username,
                         'text': text,
@@ -162,33 +152,22 @@ class SeleniumTwitterCollector:
 
                     print(f"📥 {username}: ❤️{likes} 🔁{retweets} 💬{replies} 👁️{views}")
 
-                    if max_posts and len(posts) >= max_posts:
-                        print("📦 최대 수집 개수 도달로 종료")
-                        return posts
+                    if len(posts) >= max_posts:
+                        break
                 except:
                     continue
 
-            print(f"✅ 새로 수집된 트윗 수: {new_count}")
-
-            # 새 게시물이 하나도 없으면 종료
-            if new_count == 0:
-                print("🛑 더 이상 새로운 트윗이 로드되지 않음. 종료합니다.")
-                break
-
-            # 스크롤 다운
+            print(f"✅ 이번 스크롤에서 {new_count}개 수집됨")
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(3)
-
-            # 페이지 높이 변화 확인
             new_height = self.driver.execute_script("return document.body.scrollHeight")
             if new_height == last_height:
-                print("📉 페이지 높이에 변화 없음. 종료합니다.")
                 break
             last_height = new_height
+            scroll_count += 1
 
         print(f"🎉 총 {len(posts)}개 트윗 수집 완료")
         return posts
-
 
     def save_posts(self, posts, meme_name):
         # 수집한 게시물 CSV로 저장

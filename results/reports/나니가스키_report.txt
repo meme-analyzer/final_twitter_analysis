@@ -1,0 +1,25 @@
+MEME ANALYSIS REPORT
+==================================================
+Meme: 나니가스키
+Analysis Date: 2025-06-05 01:26:36
+
+1. BASIC STATISTICS
+------------------------------
+Total Posts        : 276
+Unique Authors     : 225
+Date Range         : 2025-05-24 ~ 2025-06-04
+Duration           : 12 days
+
+2. ENGAGEMENT
+------------------------------
+Avg Likes          : 8.26
+Avg Retweets       : 2.97
+Avg Views          : 229.71
+Total Engagement   : 10260.9
+Like Rate (Likes/Views) : 0.0328
+Retweet Rate (RT/Views) : 0.0126
+
+3. LIFECYCLE PHASES
+------------------------------
+Growth Phase       : 2025-05-31 ~ 2025-05-31 (1 days)
+Decline Phase      : 2025-06-04 ~ 2025-06-04 (1 days)
