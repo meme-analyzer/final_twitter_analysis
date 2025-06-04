@@ -1,0 +1,23 @@
+MEME ANALYSIS REPORT
+==================================================
+Meme: chill guy
+Analysis Date: 2025-06-04 10:29:34
+
+1. BASIC STATISTICS
+------------------------------
+Total Posts        : 134
+Unique Authors     : 82
+Date Range         : 2016-09-26 ~ 2025-06-03
+Duration           : 3173 days
+
+2. ENGAGEMENT
+------------------------------
+Avg Likes          : 890.44
+Avg Retweets       : 137.76
+Avg Views          : 67216.98
+Total Engagement   : 1056946.5
+
+3. LIFECYCLE PHASES
+------------------------------
+Growth Phase       : 2025-05-24 ~ 2025-05-24 (1 days)
+Decline Phase      : 2025-06-03 ~ 2025-06-03 (1 days)
