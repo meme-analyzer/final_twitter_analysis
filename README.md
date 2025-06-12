@@ -16,22 +16,19 @@ Selenium을 사용한 크롤링부터 전처리, 시각화, 생존분석 및 클
 
 ---
 
-
-프로젝트 구조
-### 프로젝트 구조
+### 프로젝트 구조 
 meme_lifecycle_analysis/
 ├── data/
-│ ├── raw/ # 원본 데이터
-│ └── processed/ # 전처리된 데이터
+│   ├── raw/                # 원본 데이터
+│   └── processed/          # 전처리된 데이터
 ├── src/
-│ ├── collectors/ # 데이터 수집 모듈
-│ ├── preprocessors/ # 데이터 전처리 모듈
-│ ├── analyzers/ # 분석 모듈
-│ └── visualizers/ # 시각화 모듈
+│   ├── collectors/         # 데이터 수집 모듈
+│   ├── preprocessors/      # 데이터 전처리 모듈
+│   ├── analyzers/          # 분석 모듈
+│   └── visualizers/        # 시각화 모듈
 ├── results/
-│ ├── figures/ # 그래프 이미지
-│ └── reports/ # 분석 보고서
-├── config/ # 설정 파일
-├── notebooks/ # Jupyter 노트북
-└── run_pipeline_snsname / # SNS별 전체 파이프라인을 실행
-```
+│   ├── figures/            # 그래프 이미지
+│   └── reports/            # 분석 보고서
+├── config/                 # 설정 파일
+├── notebooks/              # Jupyter 노트북
+└── run_pipeline_snsname/   # SNS별 전체 파이프라인 실행 스크립트
